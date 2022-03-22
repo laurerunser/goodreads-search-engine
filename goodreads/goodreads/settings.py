@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9zvt+=%nti+3wby+u4@_u9m!j_s@x8^=3xo2k658#&p-l7l9x^'
+SECRET_KEY = 'django-insecure-i)g9$2i$j0wg3&5m08+88__hetch6n9x3jpqfw^$q5d@6dqt&h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'goodreads_search.apps.GoodreadsSearchConfig',
+    'searchbooks.apps.SearchbooksConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
