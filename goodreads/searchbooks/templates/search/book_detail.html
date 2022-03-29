@@ -1,6 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SearchBooks {{book.title}}</title>
+</head>
+<body>
+
 <h1>{{ book.title }}</h1>
 
 <ul>
     <li>Author : {{ book.author_name }}</li>
-    <li><a href= "{{ book.author_link }}">Link to author page</a></li>
+    <li><a href="{{ book.author_link }}">Link to author page</a></li>
+    <li>{{ book.description }}</li>
 </ul>
+
+<h2>Similar books</h2>
+<ul>
+{% for rec in recs %}
+    {% if not forloop.first %}
+    <li>{{ rec.author_name }} -- <a href="{% url 'book_detail' rec.id %}">{{ rec.title }}</a> -- {{ rec.description }} </li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+
+</body>
+</html>
