@@ -23,8 +23,10 @@ def book_detail(request, book_id):
 
     # get all the books descriptions
     all_descriptions = []
+    all_ids = []
     for data in all_books:
         all_descriptions.append(data.description)
+        all_ids.append(data.id)
 
     # apply TFIDF on books
     vectorizer = TfidfVectorizer()
@@ -40,7 +42,7 @@ def book_detail(request, book_id):
     # get the books that correspond to the index we found
     recs = []
     for a in best:
-        recs = [Book.objects.get(pk=a)] + recs
+        recs = [Book.objects.get(pk=all_ids[a])] + recs
 
     # return the request
     c = {'book': book, 'recs': recs}
