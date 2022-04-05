@@ -58,18 +58,21 @@ def search_results(request):
 
     all_books = Book.objects.all()
 
-    # get all the books descriptions
-    all_descriptions = []
+    # get all the books content (descriptions or titles depending on user's choice)
+    all_content = []
     all_ids = []
     for data in all_books:
-        all_descriptions.append(data.description)
+        if request.POST['where_search'] == 'title':
+            all_content.append(data.title)
+        else:
+            all_content.append(data.description)
         all_ids.append(data.id)
 
     # apply TFIDF on books
     vectorizer = TfidfVectorizer()
-    matrix_tfidf = vectorizer.fit_transform(all_descriptions)
+    matrix_tfidf = vectorizer.fit_transform(all_content)
 
-    # prep the reference book
+    # prep the search query
     query_tfidf = vectorizer.transform([query])
 
     # # get the cosine distance and then keep the 20 best
@@ -78,6 +81,7 @@ def search_results(request):
 
     # get the books that correspond to the index we found
     results = []
+    i = 0
     for a in best:
         results = [Book.objects.get(pk=all_ids[a])] + results
 

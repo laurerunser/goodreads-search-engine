@@ -10,7 +10,14 @@
 <form action="{% url 'search_results' %}" method="post">
   {% csrf_token %}
   <input name="search_string" type="text" placeholder="Search...">
-  <input type="submit" value="Go">
+
+  Search in : <br>
+  <input type="radio" id="title" name="where_search" value="title">
+  <label for="title">title</label><br>
+  <input type="radio" id="description" name="where_search" value="description">
+  <label for="description">description</label><br>
+
+  <input type="submit" value="GO">
 </form>
 
 </body>
