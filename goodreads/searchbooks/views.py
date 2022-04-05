@@ -54,7 +54,32 @@ def search_page(request):
 
 
 def search_results(request):
-    results = Book.objects.all()
-    query = "TEST QUERY"
-    c = {'search_string': query, 'results': results}
+    query = request.POST['search_string']
+
+    all_books = Book.objects.all()
+
+    # get all the books descriptions
+    all_descriptions = []
+    all_ids = []
+    for data in all_books:
+        all_descriptions.append(data.description)
+        all_ids.append(data.id)
+
+    # apply TFIDF on books
+    vectorizer = TfidfVectorizer()
+    matrix_tfidf = vectorizer.fit_transform(all_descriptions)
+
+    # prep the reference book
+    query_tfidf = vectorizer.transform([query])
+
+    # # get the cosine distance and then keep the 20 best
+    distances = cosine_similarity(query_tfidf, matrix_tfidf).flatten()
+    best = np.argsort(distances)
+
+    # get the books that correspond to the index we found
+    results = []
+    for a in best:
+        results = [Book.objects.get(pk=all_ids[a])] + results
+
+    c = {'query': query, 'results': results}
     return render(request, 'search/search_results.html', c)

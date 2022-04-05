@@ -5,6 +5,8 @@
 </head>
 <body>
 
+<h1>Search !</h1>
+
 <form action="{% url 'search_results' %}" method="post">
   {% csrf_token %}
   <input name="search_string" type="text" placeholder="Search...">
