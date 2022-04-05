@@ -1,7 +1,8 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
-from django.http import HttpResponse
-from django.template import Context
+from .forms import SearchForm
 
 from .models import Book
 
@@ -9,9 +10,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+
 def index(request):
     books = Book.objects.all()
-    return render(request, 'search/index.html', {'books': books},)
+    return render(request, 'search/index.html', {'books': books}, )
 
 
 def book_detail(request, book_id):
@@ -44,3 +46,13 @@ def book_detail(request, book_id):
     c = {'book': book, 'recs': recs}
     return render(request, 'search/book_detail.html', c)
 
+
+def search_page(request):
+    return render(request, 'search/search_page.html')
+
+
+def search_results(request):
+    results = Book.objects.all()
+    query = "TEST QUERY"
+    c = {'search_string': query, 'results': results}
+    return render(request, 'search/search_results.html', c)

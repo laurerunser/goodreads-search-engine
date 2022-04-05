@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Search : {{ query }}</title>
+</head>
+<body>
+
+<h1>Search results for <i>{{ query }}</i></h1>
+<ul>
+{% for book in results %}
+    <li>{{ book.author_name }} -- <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

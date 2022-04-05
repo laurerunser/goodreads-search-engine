@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SearchBooks</title>
+</head>
+<body>
+
+<form action="{% url 'search_results' %}" method="post">
+  {% csrf_token %}
+  <input name="search_string" type="text" placeholder="Search...">
+  <input type="submit" value="Go">
+</form>
+
+</body>
+</html>
