@@ -40,7 +40,8 @@ def book_detail(request, book_id):
     # get the books that correspond to the index we found
     recs = []
     for a in best:
-        recs = [Book.objects.get(pk=all_ids[a])] + recs
+        if distances[a] > 0:
+            recs = [Book.objects.get(pk=all_ids[a])] + recs
 
     # return the request
     c = {'book': book, 'recs': recs}
@@ -81,7 +82,8 @@ def search_results(request):
     results = []
     i = 0
     for a in best:
-        results = [Book.objects.get(pk=all_ids[a])] + results
+        if distances[a] > 0:
+            results = [Book.objects.get(pk=all_ids[a])] + results
 
     c = {'query': query, 'results': results}
     return render(request, 'search/search_results.html', c)
