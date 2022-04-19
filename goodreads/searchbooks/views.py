@@ -1,14 +1,12 @@
-from django.http import HttpResponseRedirect
+import string
+
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-
-from .forms import SearchForm
-
-from .models import Book
-
+from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+
+from .models import Book
 
 
 def index(request):
@@ -25,7 +23,7 @@ def book_detail(request, book_id):
     all_descriptions = []
     all_ids = []
     for data in all_books:
-        all_descriptions.append(data.description)
+        all_descriptions.append(cleanup(data.description))
         all_ids.append(data.id)
 
     # apply TFIDF on books
@@ -54,7 +52,7 @@ def search_page(request):
 
 
 def search_results(request):
-    query = request.POST['search_string']
+    query = cleanup(request.POST['search_string'])
 
     all_books = Book.objects.all()
 
@@ -63,9 +61,9 @@ def search_results(request):
     all_ids = []
     for data in all_books:
         if request.POST['where_search'] == 'title':
-            all_content.append(data.title)
+            all_content.append(cleanup(data.title))
         else:
-            all_content.append(data.description)
+            all_content.append(cleanup(data.description))
         all_ids.append(data.id)
 
     # apply TFIDF on books
@@ -87,3 +85,28 @@ def search_results(request):
 
     c = {'query': query, 'results': results}
     return render(request, 'search/search_results.html', c)
+
+
+STEMMER = PorterStemmer()
+
+
+def cleanup(str):
+    # remove punctuation and lowercase everything
+    str = str.translate(str.maketrans('', '', string.punctuation))
+    str = str.lower()
+
+    # split the string into individual words
+    words = str.split(' ')
+
+    # stemmatization
+    stemmed_words = []
+    for w in words:
+        stemmed_words.append(STEMMER.stem(w))
+
+    # remove common words
+    stop_words = {'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he',
+                  'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'wikipedia'}
+    words = [w for w in words if w not in stop_words]
+
+    # reassemble the string and return it
+    return " ".join(words)
