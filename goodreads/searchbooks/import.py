@@ -1,6 +1,5 @@
 import csv
-import os
-from searchbooks.models import Book # imports the model
+from .models import Book # imports the model
 with open('searchbooks/data/test.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
